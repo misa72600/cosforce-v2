@@ -49,10 +49,16 @@ export default function RegisterPage() {
       });
 
       if (error) {
-        setMessage(error.message || "註冊失敗");
+        console.error("Better Auth signup error:", error);
+
+        setMessage(
+          `${error.status || ""} ${error.statusText || ""} ${
+            error.message || "註冊失敗"
+          }`
+        );
+
         return;
       }
-
       if (data) {
         router.push("/user");
       }
