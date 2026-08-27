@@ -1,15 +1,26 @@
-import { env } from "cloudflare:workers";
 import { Pool } from "pg";
 import { betterAuth } from "better-auth";
 
-const pool = new Pool({
-  connectionString: env.HYPERDRIVE.connectionString,
-});
+export function createAuth(connectionString: string) {
+  const pool = new Pool({
+    connectionString,
+    max: 5,
+  });
 
-export const auth = betterAuth({
-  database: pool,
+  return betterAuth({
+    database: pool,
 
-  emailAndPassword: {
-    enabled: true,
-  },
-});
+    baseURL: {
+      allowedHosts: [
+        "cosforce-v2.misa72600.workers.dev",
+        "localhost:3000",
+      ],
+      fallback: "https://cosforce-v2.misa72600.workers.dev",
+      protocol: "auto",
+    },
+
+    emailAndPassword: {
+      enabled: true,
+    },
+  });
+}

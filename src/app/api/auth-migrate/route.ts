@@ -1,5 +1,5 @@
 import { env } from "cloudflare:workers";
-import { auth } from "@/lib/auth";
+import { createAuth } from "@/lib/auth";
 import { getMigrations } from "better-auth/db/migration";
 
 export async function POST(request: Request) {
@@ -15,6 +15,8 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+
+    const auth = createAuth(env.HYPERDRIVE.connectionString);
 
     const { toBeCreated, toBeAdded, runMigrations } =
       await getMigrations(auth.options);
