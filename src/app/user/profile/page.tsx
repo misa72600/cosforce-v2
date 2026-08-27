@@ -363,10 +363,27 @@ export default function ProfilePage() {
             {saving ? "儲存中..." : "儲存變更"}
           </button>
         </div>
+        <div className="mt-12 rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+          <h2 className="text-xl font-semibold">
+            帳號安全
+          </h2>
+        
+          <p className="mt-2 text-sm leading-6 text-neutral-400">
+            管理您的登入密碼與帳號安全設定。
+          </p>
 
+          <button
+            type="button"
+            onClick={() => router.push("/user/change-password")}
+            className="mt-5 rounded-xl border border-neutral-700 px-5 py-3 font-semibold transition hover:bg-neutral-800"
+          >
+            更改密碼
+          </button>
+        </div>
+        
         <div className="mt-12 rounded-2xl border border-red-950 bg-red-950/20 p-6">
           <h2 className="text-xl font-semibold text-red-300">
-            危險區域
+            刪除我的會員帳號
           </h2>
 
           <p className="mt-2 text-sm leading-6 text-neutral-400">
