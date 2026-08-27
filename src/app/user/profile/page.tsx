@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import UserDashboardShell from "@/components/user/UserDashboardShell";
 
 type Profile = {
   uid: string;
@@ -216,40 +217,38 @@ export default function ProfilePage() {
   }
 }
 
-  if (sessionPending || loading) {
+  if (loading) {
     return (
-      <main className="min-h-screen bg-neutral-950 px-6 py-16 text-white">
-        <div className="mx-auto max-w-2xl">
-          <p className="text-neutral-400">
-            讀取會員資料中...
-          </p>
+      <UserDashboardShell>
+        <div className="px-5 py-8 md:px-10 md:py-10">
+         <div className="mx-auto max-w-2xl">
+            <p className="text-neutral-400">
+              讀取會員資料中...
+            </p>
+          </div>
         </div>
-      </main>
+      </UserDashboardShell>
     );
   }
 
   if (!profile) {
     return (
-      <main className="min-h-screen bg-neutral-950 px-6 py-16 text-white">
-        <div className="mx-auto max-w-2xl">
-          <p className="text-red-400">
-            {error || "找不到會員資料"}
-          </p>
+      <UserDashboardShell>
+        <div className="px-5 py-8 md:px-10 md:py-10">
+          <div className="mx-auto max-w-2xl">
+            <p className="text-red-400">
+              {error || "找不到會員資料"}
+            </p>
+          </div>
         </div>
-      </main>
+      </UserDashboardShell>
     );
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 px-5 py-12 text-white">
+      <UserDashboardShell>
+       <div className="px-5 py-8 md:px-10 md:py-10">
       <div className="mx-auto w-full max-w-2xl">
-        <button
-          type="button"
-          onClick={() => router.push("/user")}
-          className="mb-8 text-sm text-neutral-400 transition hover:text-white"
-        >
-          ← 返回會員中心
-        </button>
 
         <p className="mb-2 text-sm text-neutral-400">
           CosForce 2.0
@@ -456,6 +455,7 @@ export default function ProfilePage() {
           </button>
         </div>
       </div>
-    </main>
-  );
+    </div>
+  </UserDashboardShell>
+);
 }
