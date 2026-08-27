@@ -3,10 +3,10 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import UserDashboardShell from "@/components/user/UserDashboardShell";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -70,142 +70,116 @@ export default function ChangePasswordPage() {
     }
   }
 
-  if (isPending) {
-    return (
-      <main className="min-h-screen bg-neutral-950 px-6 py-16 text-white">
-        <div className="mx-auto max-w-md">
-          <p className="text-neutral-400">讀取會員資料中...</p>
-        </div>
-      </main>
-    );
-  }
-
-  if (!session) {
-    return (
-      <main className="min-h-screen bg-neutral-950 px-6 py-16 text-white">
-        <div className="mx-auto max-w-md">
-          <p className="text-neutral-300">您尚未登入。</p>
-
+  return (
+    <UserDashboardShell>
+      <div className="px-5 py-8 md:px-10 md:py-10">
+        <div className="mx-auto w-full max-w-md">
           <button
             type="button"
-            onClick={() => router.push("/login")}
-            className="mt-6 rounded-xl bg-white px-5 py-3 font-semibold text-black"
+            onClick={() => router.push("/user/profile")}
+            className="mb-8 text-sm text-neutral-400 transition hover:text-white"
           >
-            前往登入
+            ← 返回會員資料
           </button>
+
+          <p className="text-sm text-neutral-500">
+            SECURITY
+          </p>
+
+          <h1 className="mt-2 text-3xl font-bold md:text-4xl">
+            更改密碼
+          </h1>
+
+          <p className="mt-3 text-sm leading-6 text-neutral-400">
+            更改密碼後，其他裝置上的登入狀態將會失效。
+          </p>
+
+          <form
+            onSubmit={handleSubmit}
+            className="mt-10 space-y-5 rounded-2xl border border-neutral-800 bg-neutral-900 p-6"
+          >
+            <div>
+              <label
+                htmlFor="currentPassword"
+                className="mb-2 block text-sm font-medium"
+              >
+                目前密碼
+              </label>
+
+              <input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(event) =>
+                  setCurrentPassword(event.target.value)
+                }
+                autoComplete="current-password"
+                className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none transition focus:border-neutral-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="newPassword"
+                className="mb-2 block text-sm font-medium"
+              >
+                新密碼
+              </label>
+
+              <input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(event) =>
+                  setNewPassword(event.target.value)
+                }
+                autoComplete="new-password"
+                className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none transition focus:border-neutral-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="mb-2 block text-sm font-medium"
+              >
+                確認新密碼
+              </label>
+
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(event) =>
+                  setConfirmPassword(event.target.value)
+                }
+                autoComplete="new-password"
+                className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none transition focus:border-neutral-400"
+              />
+            </div>
+
+            {message && (
+              <div className="rounded-xl border border-green-900 bg-green-950/40 px-4 py-3 text-sm text-green-300">
+                {message}
+              </div>
+            )}
+
+            {errorMessage && (
+              <div className="rounded-xl border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-300">
+                {errorMessage}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl bg-white px-5 py-3 font-semibold text-black disabled:opacity-50"
+            >
+              {loading ? "變更中..." : "更改密碼"}
+            </button>
+          </form>
         </div>
-      </main>
-    );
-  }
-
-  return (
-    <main className="min-h-screen bg-neutral-950 px-5 py-12 text-white">
-      <div className="mx-auto w-full max-w-md">
-        <button
-          type="button"
-          onClick={() => router.push("/user/profile")}
-          className="mb-8 text-sm text-neutral-400 transition hover:text-white"
-        >
-          ← 返回會員資料
-        </button>
-
-        <p className="mb-2 text-sm text-neutral-400">
-          CosForce 2.0
-        </p>
-
-        <h1 className="text-4xl font-bold">
-          更改密碼
-        </h1>
-
-        <p className="mt-3 text-sm leading-6 text-neutral-400">
-          更改密碼後，其他裝置上的登入狀態將會失效。
-        </p>
-
-        <form
-          onSubmit={handleSubmit}
-          className="mt-10 space-y-5 rounded-2xl border border-neutral-800 bg-neutral-900 p-6"
-        >
-          <div>
-            <label
-              htmlFor="currentPassword"
-              className="mb-2 block text-sm font-medium"
-            >
-              目前密碼
-            </label>
-
-            <input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(event) =>
-                setCurrentPassword(event.target.value)
-              }
-              autoComplete="current-password"
-              className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none transition focus:border-neutral-400"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="newPassword"
-              className="mb-2 block text-sm font-medium"
-            >
-              新密碼
-            </label>
-
-            <input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(event) =>
-                setNewPassword(event.target.value)
-              }
-              autoComplete="new-password"
-              className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none transition focus:border-neutral-400"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="mb-2 block text-sm font-medium"
-            >
-              確認新密碼
-            </label>
-
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(event) =>
-                setConfirmPassword(event.target.value)
-              }
-              autoComplete="new-password"
-              className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 outline-none transition focus:border-neutral-400"
-            />
-          </div>
-
-          {message && (
-            <div className="rounded-xl border border-green-900 bg-green-950/40 px-4 py-3 text-sm text-green-300">
-              {message}
-            </div>
-          )}
-
-          {errorMessage && (
-            <div className="rounded-xl border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-300">
-              {errorMessage}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl bg-white px-5 py-3 font-semibold text-black disabled:opacity-50"
-          >
-            {loading ? "變更中..." : "更改密碼"}
-          </button>
-        </form>
       </div>
-    </main>
+    </UserDashboardShell>
   );
 }
