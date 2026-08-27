@@ -155,9 +155,66 @@ export default function ProfilePage() {
     }
   }
 
-  function handleDeleteAccount() {
-    alert("刪除會員功能將於下一步加入");
+  async function handleDeleteAccount() {
+  const confirmed = window.confirm(
+    "確定要永久刪除會員帳號嗎？\n\n此操作無法復原。"
+  );
+
+  if (!confirmed) {
+    return;
   }
+
+  const secondConfirmed = window.confirm(
+    "最後確認：刪除後將無法恢復會員資料。\n\n確定要繼續嗎？"
+  );
+
+  if (!secondConfirmed) {
+    return;
+  }
+
+  setMessage("");
+  setError("");
+
+  try {
+    const response = await fetch("/api/account", {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const text = await response.text();
+
+    let data: {
+      success?: boolean;
+      error?: string;
+    } = {};
+
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("伺服器回傳格式錯誤");
+      }
+    }
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "刪除會員帳號失敗");
+    }
+
+    // 清除 Better Auth Client 端登入狀態
+    await authClient.signOut().catch(() => {});
+
+    router.replace("/");
+    router.refresh();
+  } catch (error) {
+    console.error(error);
+
+    setError(
+      error instanceof Error
+        ? error.message
+        : "刪除會員帳號失敗"
+    );
+  }
+}
 
   if (sessionPending || loading) {
     return (
