@@ -71,7 +71,7 @@ export default function UserSidebar() {
   }
 
   return (
-    <aside className="flex min-h-screen w-64 shrink-0 flex-col border-r border-neutral-800 bg-red-950">
+    <aside className="hidden min-h-screen w-64 shrink-0 flex-col border-r border-neutral-800 bg-neutral-950 md:flex">
       {/* Logo */}
       <div className="border-b border-neutral-800 px-6 py-6">
         <button
